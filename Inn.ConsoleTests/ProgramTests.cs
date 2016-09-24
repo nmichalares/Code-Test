@@ -168,6 +168,41 @@ namespace Inn.Console.Tests
             Assert.AreEqual(5, TestItems[0].Quality);
         }
 
+        [TestMethod()]
+        public void ItemQualityNeverNegativeTest()
+        {
+            TestItems.Add(new Item { Name = "Elixir of the Mongoose", SellIn = 0, Quality = 0 });
+            TestItems.Add(new Item { Name = "Elixir of the Mongoose", SellIn = 0, Quality = -5 });
+            
+            var program = new Program()
+            {
+                Items = TestItems
+            };
+
+            program.DailyOperation();
+
+            Assert.IsTrue(TestItems[0].Quality >= 0);
+            Assert.IsTrue(TestItems[1].Quality >= 0);
+        }
+
+        [TestMethod()]
+        public void ItemQualityNeverAboveFiftyTest()
+        {
+            TestItems.Add(new Item { Name = "Elixir of the Mongoose", SellIn = 0, Quality = 75});
+            TestItems.Add(new Item { Name = "Aged Brie", SellIn = 0, Quality = 75 });
+
+            var program = new Program()
+            {
+                Items = TestItems
+            };
+
+            program.DailyOperation();
+
+            Assert.IsTrue(TestItems[0].Quality <= 50);
+            Assert.IsTrue(TestItems[1].Quality <= 50);
+        }
+
+
         [TestMethod]
         public void ConjuredItemsDecreaseTwiceAsFast()
         {

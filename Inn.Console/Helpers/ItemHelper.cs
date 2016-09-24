@@ -2,8 +2,11 @@
 
 namespace Inn.Console.Helpers
 {
-    public class ItemHelper
+    public static class ItemHelper
     {
+        private static readonly int MAX_QUALITY = 50;
+        private static readonly int MIN_QUALITY = 0;
+
         public static bool ItemIsLegendary(Item item)
         {
             return item.Name == "Sulfuras, Hand of Ragnaros";
@@ -36,12 +39,12 @@ namespace Inn.Console.Helpers
 
         public static void ResetItemQuality(Item item)
         {
-            item.Quality = item.Quality - item.Quality;
+            item.Quality = MIN_QUALITY;
         }
-        
+
         public static void DecreaseSellIn(Item item)
         {
-            item.SellIn = item.SellIn - 1;
+            item.SellIn--;
         }
 
         public static void HandleIncrementalQualityIncrease(Item item)
@@ -63,6 +66,8 @@ namespace Inn.Console.Helpers
             {
                 SubtractItemQuality(item);
             }
+
+            AssureItemQualityMinMax(item);
         }
 
         public static void UpdateIncreadedItemQuality(Item item)
@@ -72,37 +77,36 @@ namespace Inn.Console.Helpers
             {
                 AddItemQuality(item);
             }
+
+            AssureItemQualityMinMax(item);
         }
 
 
-        private static bool ItemIsLessThanMaxQuality(Item item)
+        private static void AssureItemQualityMinMax(Item item)
         {
-            return item.Quality < 50;
-        }
+            if(item.Quality > MAX_QUALITY)
+            {
+                item.Quality = MAX_QUALITY;
+            }
 
-        private static bool ItemIsGreaterThanMinQuality(Item item)
-        {
-            return item.Quality > 0;
+            if (item.Quality < MIN_QUALITY)
+            {
+                item.Quality = MIN_QUALITY;
+            }
         }
 
         private static void SubtractItemQuality(Item item)
         {
-            if (ItemIsGreaterThanMinQuality(item))
+            item.Quality--;
+            if (ItemIsConjured(item))
             {
                 item.Quality--;
-                if (ItemIsConjured(item) && ItemIsGreaterThanMinQuality(item))
-                {
-                    item.Quality--;
-                }
             }
         }
 
         private static void AddItemQuality(Item item)
         {
-            if (ItemIsLessThanMaxQuality(item))
-            {
-                item.Quality++;
-            }
+            item.Quality++;
         }
     }
 }
