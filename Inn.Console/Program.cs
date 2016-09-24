@@ -1,27 +1,24 @@
 ﻿using System.Collections.Generic;
-using Inn.Console.Models;
-using static Inn.Console.Helpers.ItemHelper;
+using Inn.Models;
+using Inn.Services;
 
 namespace Inn.Console
 {
     public class Program
     {
-        public IList<Item> Items;
+        public IList<ItemForSale> ItemsForSale;
+        public Items ItemsService;
+
         static void Main(string[] args)
         {
+            var items = new Items();
+
             System.Console.WriteLine("Another Day at the Inn.");
 
             var program = new Program()
             {
-                Items = new List<Item>
-                {
-                    new Item { Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20 },
-                    new Item { Name = "Aged Brie", SellIn = 2, Quality = 0 },
-                    new Item { Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7 },
-                    new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 },
-                    new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 15, Quality = 20 },
-                    new Item { Name = "Conjured Mana Cake", SellIn = 3, Quality = 6 }
-                }
+                ItemsForSale = items.GetItems(),
+                ItemsService = items
             };
 
             program.DailyOperation();
@@ -29,35 +26,9 @@ namespace Inn.Console
 
         public void DailyOperation()
         {
-            foreach (var item in Items)
+            foreach (var item in ItemsForSale)
             {
-                if (ItemIsLegendary(item))
-                {
-                    continue;
-                }
-
-                DecreaseSellIn(item);
-
-                if (ItemExpires(item) && ItemPastSellDate(item))
-                {
-                    ResetItemQuality(item);
-                    continue;
-                }
-
-                if (ItemIncreasesIncrmentallyBetterTowardsSellIn(item))
-                {
-                    HandleIncrementalQualityIncrease(item);
-                }
-
-                if (ItemGetsBetterWithAge(item))
-                {
-                    UpdateIncreadedItemQuality(item);
-                }
-                else
-                {
-                    UpdateDecreasedItemQuality(item);
-                    continue;
-                }
+                ItemsService.DailyOperation(item);
             }
         }
     }

@@ -59,6 +59,14 @@
       <Project>{6C80E100-63F5-4BEC-91FC-86748643F1D7}</Project>
       <Name>Inn.Console</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Inn.Models\Inn.Models.csproj">
+      <Project>{DA300286-6479-4035-9AD3-69857B5A267F}</Project>
+      <Name>Inn.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Inn.Services\Inn.Services.csproj">
+      <Project>{13043BE9-D120-4F77-849B-DBB61DC23825}</Project>
+      <Name>Inn.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Inn.Console.Models;
+using Inn.Models;
+using Inn.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Inn.Console.Tests
@@ -7,21 +8,21 @@ namespace Inn.Console.Tests
     [TestClass()]
     public class ProgramTests
     {
-        IList<Item> TestItems;
+        IList<ItemForSale> TestItems;
         [TestInitialize()]
         public void TestInit()
         {
-            TestItems = new List<Item>();
+            TestItems = new List<ItemForSale>();
         }
 
         [TestMethod()]
         public void SulfurasDoesntGetMessedWithTest()
         {
-            TestItems.Add(new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 });
+            TestItems.Add(new ItemForSale("Sulfuras, Hand of Ragnaros", 0, 80));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -33,11 +34,11 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void AgedBrieIncreasesTest()
         {
-            TestItems.Add(new Item { Name = "Aged Brie", SellIn = 2, Quality = 0 });
+            TestItems.Add(new ItemForSale("Aged Brie", 2, 0));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -49,11 +50,11 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void AgedBrieDoubleIncreasesAfterSellInTest()
         {
-            TestItems.Add(new Item { Name = "Aged Brie", SellIn = 0, Quality = 0 });
+            TestItems.Add(new ItemForSale("Aged Brie", 0, 0));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -64,11 +65,11 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void BackStagePassIncreasesTest()
         {
-            TestItems.Add(new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 15, Quality = 20 });
+            TestItems.Add(new ItemForSale("Backstage passes to a TAFKAL80ETC concert", 15, 20));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -79,11 +80,11 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void BackStagePassTenOrLessDaysIncreasesTest()
         {
-            TestItems.Add(new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 10, Quality = 20 });
+            TestItems.Add(new ItemForSale("Backstage passes to a TAFKAL80ETC concert", 10, 20));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -94,11 +95,11 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void BackStagePassFiveOrLessDaysIncreasesTest()
         {
-            TestItems.Add(new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 5, Quality = 20 });
+            TestItems.Add(new ItemForSale("Backstage passes to a TAFKAL80ETC concert", 5, 20));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -109,11 +110,11 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void BackStagePassZeroOrLessDaysResetsTest()
         {
-            TestItems.Add(new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 0, Quality = 20 });
+            TestItems.Add(new ItemForSale("Backstage passes to a TAFKAL80ETC concert", 0, 20));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -124,12 +125,12 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void AgedBrieAndBackStagePassDoesntExceedFiftyQualityTest()
         {
-            TestItems.Add(new Item { Name = "Aged Brie", SellIn = 2, Quality = 50 });
-            TestItems.Add(new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 15, Quality = 50 });
+            TestItems.Add(new ItemForSale("Aged Brie", 2, 50));
+            TestItems.Add(new ItemForSale("Backstage passes to a TAFKAL80ETC concert", 15, 50));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -141,11 +142,11 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void NormalItemDecreasesTest()
         {
-            TestItems.Add(new Item { Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7 });
+            TestItems.Add(new ItemForSale("Elixir of the Mongoose", 5, 7));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -156,11 +157,11 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void NormalItemDecreasesDoubleAfterSellInTest()
         {
-            TestItems.Add(new Item { Name = "Elixir of the Mongoose", SellIn = 0, Quality = 7 });
+            TestItems.Add(new ItemForSale("Elixir of the Mongoose", 0, 7));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -171,12 +172,12 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void ItemQualityNeverNegativeTest()
         {
-            TestItems.Add(new Item { Name = "Elixir of the Mongoose", SellIn = 0, Quality = 0 });
-            TestItems.Add(new Item { Name = "Elixir of the Mongoose", SellIn = 0, Quality = -5 });
-            
+            TestItems.Add(new ItemForSale("Elixir of the Mongoose", 0, 0));
+            TestItems.Add(new ItemForSale("Elixir of the Mongoose", 0, -5));
+           
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -188,12 +189,12 @@ namespace Inn.Console.Tests
         [TestMethod()]
         public void ItemQualityNeverAboveFiftyTest()
         {
-            TestItems.Add(new Item { Name = "Elixir of the Mongoose", SellIn = 0, Quality = 75});
-            TestItems.Add(new Item { Name = "Aged Brie", SellIn = 0, Quality = 75 });
+            TestItems.Add(new ItemForSale("Elixir of the Mongoose", 0, 75));
+            TestItems.Add(new ItemForSale("Aged Brie", 0, 75));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -206,11 +207,11 @@ namespace Inn.Console.Tests
         [TestMethod]
         public void ConjuredItemsDecreaseTwiceAsFast()
         {
-            TestItems.Add(new Item { Name = "Conjured Mana Cake", SellIn = 3, Quality = 6 });
+            TestItems.Add(new ItemForSale("Conjured Mana Cake", 3, 6));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();
@@ -221,11 +222,11 @@ namespace Inn.Console.Tests
         [TestMethod]
         public void ConjuredItemsDecreaseTwiceAsFastAfterSellIn()
         {
-            TestItems.Add(new Item { Name = "Conjured Mana Cake", SellIn = 0, Quality = 6 });
+            TestItems.Add(new ItemForSale("Conjured Mana Cake", 0, 6));
 
             var program = new Program()
             {
-                Items = TestItems
+                ItemsForSale = TestItems, ItemsService = new Items()
             };
 
             program.DailyOperation();

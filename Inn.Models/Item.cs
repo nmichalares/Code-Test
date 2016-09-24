@@ -1,4 +1,4 @@
-﻿namespace Inn.Console.Models
+﻿namespace Inn.Models
 {
     public class Item
     {
